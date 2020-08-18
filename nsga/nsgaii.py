@@ -1,14 +1,15 @@
 import logging
 import matplotlib.pyplot as plt
 import pandas as pd
-import importlib
-import nsga2_alt2
 
-importlib.reload(nsga2_alt2)
+# import importlib
+# import nsga2_alt2
 
-from matplotlib.backends.backend_pdf import PdfPages
+# importlib.reload(nsga2_alt2)
 
-from objective_func import (
+# from matplotlib.backends.backend_pdf import PdfPages
+
+from nsga.objective_func import (
     objective_accuracy,
     objective_error,
     objective_precision,

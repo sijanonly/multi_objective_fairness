@@ -1,5 +1,5 @@
 from sklearn.metrics import confusion_matrix as cm
-from utils import weighted_sum, prepare_normalized_weighted_sum, accuracy, error
+from nsga.utils import weighted_sum, prepare_normalized_weighted_sum, accuracy, error
 
 
 def objective_accuracy(W, X1, X2, X1_labels, X2_labels):

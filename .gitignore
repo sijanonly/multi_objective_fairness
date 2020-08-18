@@ -140,4 +140,5 @@ cython_debug/
 
 
 data/
+dataset/
 logs/

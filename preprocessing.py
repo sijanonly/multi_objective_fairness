@@ -1,9 +1,14 @@
+import math
+import numpy as np
+import pandas as pd
+
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
 
 
 def prepare_data(dataset, data_path):
 
-    if data.strip().lower() == "bank":
+    if dataset.strip().lower() == "bank":
         df = pd.read_csv("bank/Dataset.csv")
         columns = list(df.columns)
         columns = [
@@ -27,7 +32,7 @@ def prepare_data(dataset, data_path):
         label = "Exited"
         features = list(set(categorical_features + continous_features))
 
-    if data.strip().lower() == "adult":
+    if dataset.strip().lower() == "adult":
 
         def convert_workclass(value):
             for key, values in workclass_mapper.items():
@@ -98,7 +103,7 @@ def prepare_data(dataset, data_path):
         label = "income"
         features = list(set(categorical_features + continous_features))
 
-    if data.strip().lower() == "compas":
+    if dataset.strip().lower() == "compas":
         df3 = pd.read_csv(data_path)
 
         # convert object to datetime object
@@ -183,19 +188,27 @@ def process_categorical(df, features, label, categorical_features):
 def prepare_data_split(X, y):
     scaler = MinMaxScaler()
 
-    X = pd.DataFrame(scaler.fit_transform(X), index=X.index, columns=X.columns)
+    # X = pd.DataFrame(scaler.fit_transform(X), index=X.index, columns=X.columns)
     # 70% for train and 30% for test also define stratified on target value
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, train_size=0.7, random_state=0
+        X, y, train_size=0.7, random_state=42
     )
-    return X_train, X_test, y_train, y_test
+    normalized_train_X = pd.DataFrame(
+        scaler.fit_transform(X_train), index=X_train.index, columns=X_train.columns
+    )
+
+    normalized_test_X = pd.DataFrame(
+        scaler.transform(X_test), index=X_test.index, columns=X_test.columns
+    )
+
+    return normalized_train_X, normalized_test_X, y_train, y_test
 
 
-def _get_split_index(X, dataset):
-    if dataset == "adult":
+def _get_split_index(dataset, X):
+    if dataset.strip().lower() == "adult":
         attr1_indexes = X.index[X["gender_Female"] == 1].tolist()
         attr2_indexes = X.index[X["gender_Male"] == 1].tolist()
-    elif dataset == "compas":
+    elif dataset.strip().lower() == "compas":
         attr1_indexes = X.index[X["race_White"] == 0].tolist()
         attr2_indexes = X.index[X["race_White"] == 1].tolist()
 
@@ -208,7 +221,7 @@ def _get_split_index(X, dataset):
 
 def split_on_sensitive_attr(dataset, X, y):
 
-    attr1_idx, attr2_idx = _get_split_index(X, dataset)
+    attr1_idx, attr2_idx = _get_split_index(dataset, X)
 
     X_1 = X[X.index.isin(attr1_idx)]
     y_1 = y[y.index.isin(attr1_idx)]

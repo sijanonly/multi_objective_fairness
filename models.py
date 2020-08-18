@@ -71,12 +71,18 @@ class Classifier:
         self.model = CLASSIFIER_TYPE.get(self.model_type)
 
     def _prepare_train_test(self):
-        self.Xtrain_f, self.ytrain_f, self.Xtrain_m, self.ytrain_m = split_on_sensitive_attr(
-            self.X_train, self.y_train, self.dataset
-        )
-        self.Xtest_f, self.ytest_f, self.Xtest_m, self.ytest_m = split_on_sensitive_attr(
-            self.X_test, self.y_test, self.dataset
-        )
+        (
+            self.Xtrain_f,
+            self.ytrain_f,
+            self.Xtrain_m,
+            self.ytrain_m,
+        ) = split_on_sensitive_attr(self.dataset, self.X_train, self.y_train)
+        (
+            self.Xtest_f,
+            self.ytest_f,
+            self.Xtest_m,
+            self.ytest_m,
+        ) = split_on_sensitive_attr(self.dataset, self.X_test, self.y_test)
 
     def prepare_test_probabilities(self, model, removal_features):
         Xtest_m = _remove_features(self.Xtest_m[:], removal_features)
@@ -141,16 +147,16 @@ class Classifier:
         logger.info("......starting main classifer.....")
         # without sensitive features
         m0 = self._prepare_classifier(self.sensitive_features)
-
+        print("1 done")
         # with all features
         m1 = self._prepare_classifier([])
-
+        print("2 done")
         # model only female :
         m2 = self._prepare_classifier(["Gender_Male"])
-
+        print("3 done")
         # model only male :
         m3 = self._prepare_classifier(["Gender_Female"])
-
+        print("4 done")
         logger.info("......ending main classifer.....")
 
         return m0, m1, m2, m3
@@ -243,13 +249,17 @@ class Classifier:
     def _featuresubsample_classifier(self):
         logger.info("......starting feature subsample classifer.....")
         feature1 = _prepare_feature_subsample(self.features, size=6)
+
         feature2 = _prepare_feature_subsample(self.features, size=7)
         feature3 = _prepare_feature_subsample(self.features, size=8)
         feature4 = _prepare_feature_subsample(self.features, size=9)
 
         m8 = self._prepare_featuresubsample_classifier(feature1)
+        print("1 done")
         m9 = self._prepare_featuresubsample_classifier(feature2)
+        print("2 done")
         m10 = self._prepare_featuresubsample_classifier(feature3)
+        print("3 done")
         m11 = self._prepare_featuresubsample_classifier(feature4)
         logger.info("......ending feature subsample classifer.....")
         return m8, m9, m10, m11

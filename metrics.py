@@ -42,7 +42,7 @@ class Fairness:
             self.ytrain_f, self.predictions_female
         )
         precision_f = TP_f / (TP_f + FP_f)
-        return get_ratio(precision_m, precision_f)
+        return _get_ratio(precision_m, precision_f)
 
     def fairness_recall(self):
         TP_m, FN_m, FP_m, TN_m = _calculate_confusion_matrix(

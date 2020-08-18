@@ -1,9 +1,11 @@
-from nsgaii import NSGAII
+from nsga.nsgaii import NSGAII
 
+from nsga.config import NSGAConfig
 
-def run(model_type, X_m, y_m, X_f, y_f, X_test_m, y_test_m, X_test_f, y_test_f):
-    generations = [10, 20, 50, 100]
-    populations = [20, 50, 100, 200]
+# def run(
+#     model_type, X_m, y_m, X_f, y_f, X_test_m, y_test_m, X_test_f, y_test_f, **kwargs
+# ):
+def run(nsga_cfg: NSGAConfig):
     combinations = list(itertools.product(generations, populations))
 
     for ind, item in enumerate(combinations):
