@@ -21,6 +21,8 @@ pip install -r requirements.txt
 
 To train the model(s) in the paper, run this command:
 
+`python train.py`
+
 ## Evaluation
 
 To evaluate my model on ImageNet, run:
